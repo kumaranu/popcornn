@@ -1,9 +1,13 @@
+import logging
+import json
 import numpy as np
 import torch
 import ase
 from ase.io import read
 from ase.constraints import FixAtoms
 from dataclasses import dataclass
+
+from popcornn.tools import unwrap_atoms
 
 
 @dataclass
@@ -64,12 +68,22 @@ class Images():
         return self
 
 
-def process_images(raw_images, device, dtype):
+def process_images(raw_images, device, dtype, unwrap_positions=True):
     """
     Process the images.
+
+    Parameters:
+    ----------
+    unwrap_positions: bool
+        Whether to unwrap the positions under periodic boundary conditions 
+        using minimum image convention, assuming no atoms move more than half 
+        the box length.
     """
     if type(raw_images) == str:
-        if raw_images.endswith('.npy'):
+        if raw_images.endswith('.json'):
+            with open(raw_images, 'r') as f:
+                raw_images = json.load(f)
+        elif raw_images.endswith('.npy'):
             raw_images = np.load(raw_images)
         elif raw_images.endswith('.pt'):
             raw_images = torch.load(raw_images)
@@ -82,7 +96,7 @@ def process_images(raw_images, device, dtype):
     image_type = type(raw_images[0])
     if image_type in [np.ndarray, list]:
         raw_images = torch.tensor(raw_images, device=device, dtype=dtype)
-        fix_positions = torch.zeros_like(raw_images, dtype=torch.bool)
+        fix_positions = torch.zeros_like(raw_images[0], dtype=torch.bool)
         processed_images = Images(
             image_type=image_type,
             positions=raw_images,
@@ -90,13 +104,19 @@ def process_images(raw_images, device, dtype):
         )
     elif image_type is torch.Tensor:
         raw_images = raw_images.to(device=device, dtype=dtype)
-        fix_positions = torch.zeros_like(raw_images, dtype=torch.bool)
+        fix_positions = torch.zeros_like(raw_images[0], dtype=torch.bool)
         processed_images = Images(
             image_type=image_type,
             positions=raw_images,
             fix_positions=fix_positions,
         )
     elif issubclass(image_type, ase.Atoms):
+        if raw_images[0].pbc.any():
+            if unwrap_positions:
+                logging.warning("Unwrapping atom positions. Assuming no atoms move more than half the box length.")
+                raw_images = unwrap_atoms(raw_images)
+            else:
+                logging.warning("Not unwrapping atom positions. Assuming atoms are already unwrapped or do not travel across period boundaries.")
         assert np.all(image.get_positions().shape == raw_images[0].get_positions().shape for image in raw_images), "All images must have the same shape."
         positions = torch.tensor([image.get_positions().flatten() for image in raw_images], device=device, dtype=dtype)
         assert np.all(image.get_atomic_numbers() == raw_images[0].get_atomic_numbers() for image in raw_images), "All images must have the same atomic atomic_numbers."
@@ -104,7 +124,7 @@ def process_images(raw_images, device, dtype):
         assert np.all(image.get_pbc() == raw_images[0].get_pbc() for image in raw_images), "All images must have the same pbc."
         pbc = torch.tensor(raw_images[0].get_pbc(), device=device, dtype=torch.bool)
         assert np.all(image.get_cell() == raw_images[0].get_cell() for image in raw_images), "All images must have the same cell."
-        cell = torch.tensor(raw_images[0].get_cell().array, device=device, dtype=torch.float)
+        cell = torch.tensor(raw_images[0].get_cell().array, device=device, dtype=dtype)
         assert np.all(image.constraints.__repr__() == raw_images[0].constraints.__repr__() for image in raw_images), "All images must have the same constraints."
         fix_positions = torch.zeros_like(positions[0], dtype=torch.bool)
         fix_positions = fix_positions.view(-1, 3)

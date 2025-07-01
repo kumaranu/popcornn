@@ -73,8 +73,8 @@ class BasePath(torch.nn.Module):
     def __init__(
             self,
             images: Images,
-            device: torch.device = None,
-            dtype: torch.dtype = None,
+            device: torch.device,
+            dtype: torch.dtype,
             find_ts: bool = True,
         ) -> None:
         """
@@ -91,8 +91,8 @@ class BasePath(torch.nn.Module):
         self.neval = 0
         self.find_ts = find_ts
         self.potential = None
-        self.initial_position = images.positions[0].to(device)
-        self.final_position = images.positions[-1].to(device)
+        self.initial_position = images.positions[0]
+        self.final_position = images.positions[-1]
         self._inp_reshaped = None
         if images.pbc is not None and images.pbc.any():
             def transform(positions, **kwargs):
@@ -206,6 +206,7 @@ class BasePath(torch.nn.Module):
         if self.transform is not None:
             positions = self.transform(positions)
         if return_energies or return_energies_decomposed or return_forces or return_forces_decomposed:
+            assert self.potential is not None, "Potential must be set by \'set_potential\' before calling \'forward\'"
             potential_output = self.potential(positions) 
             self._check_output(
                 potential_output,
@@ -235,7 +236,7 @@ class BasePath(torch.nn.Module):
 
     def _reshape_in(self, time):
         if time is None:
-            time = torch.linspace(self.t_init.item(), self.t_final.item(), 101)
+            time = torch.linspace(self.t_init.item(), self.t_final.item(), 101, device=self.device, dtype=self.dtype)
         
         if len(time.shape) == 3:
             self._inp_reshaped = True

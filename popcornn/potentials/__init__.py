@@ -1,7 +1,7 @@
 
 
-def get_potential(potential, **kwargs):
-    name = potential.lower()
+def get_potential(name, **kwargs):
+    name = name.lower()
     if name == "wolfe_schlegel":
         from .wolfe_schlegel import WolfeSchlegel
         return WolfeSchlegel(**kwargs)
@@ -14,6 +14,9 @@ def get_potential(potential, **kwargs):
     elif name == "constant":
         from .constant import Constant
         return Constant(**kwargs)
+    elif name == "sphere":
+        from .sphere import Sphere
+        return Sphere(**kwargs)
     elif name == "lennard_jones":
         from .lennard_jones import LennardJones
         return LennardJones(**kwargs)

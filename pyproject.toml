@@ -3,19 +3,19 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Popcornn"
-description="Path Optimization with a Continuous Representation Neural Network (Popcornn) optimizes molecular reaction paths along analytic and MLIP potentials."
+name = "popcornn"
+description="Path Optimization with a Continuous Representation Neural Network (popcornn) optimizes molecular reaction paths along analytic and MLIP potentials."
 version = "0.0.1"
 readme = "README.md"
-license = { text = "CC-BY 4.0" }
+license = "CC-BY-4.0"
 authors = [
-{ name = "Kareem Hegazy", email = "khegazy@berkeley.edu" },
-{ name = "Eric C.-Y. Yuan", email = "ericyuan@berkeley.edu" },
-{ name = "Anup Kumar", email = "anukumar94663@gmail.com" },
-{ name = "Dmitriy Morozov", email = "dmitriy@mrzv.org" },
-{ name = "Michael Mahoney", email = "mmahoney@stat.berkeley.edu" },
-{ name = "Teresa Head-Gordon", email = "thg@berkeley.edu" },
-{ name = "Samuel M. Blau", email = "smblau@lbl.gov " }
+    { name = "Kareem Hegazy", email = "khegazy@berkeley.edu" },
+    { name = "Eric C.-Y. Yuan", email = "ericyuan@berkeley.edu" },
+    { name = "Anup Kumar", email = "anukumar94663@gmail.com" },
+    { name = "Dmitriy Morozov", email = "dmitriy@mrzv.org" },
+    { name = "Michael Mahoney", email = "mmahoney@stat.berkeley.edu" },
+    { name = "Teresa Head-Gordon", email = "thg@berkeley.edu" },
+    { name = "Samuel M. Blau", email = "smblau@lbl.gov" }
 ]
 keywords = ["Chemistry", "Transition State", "Reaction path", "Minimum Energy Path", "Geodesic"]
 classifiers = [
@@ -54,15 +54,19 @@ docs = [
 ]
 
 [project.urls]
-repository = "https://github.com/khegazy/Popcornn"
-documentation = "https://khegazy.github.io/Popcornn/"
-changelog = "https://github.com/khegazy/Popcornn/blob/main/CHANGELOG.md"
+repository = "https://github.com/khegazy/popcornn"
+documentation = "https://khegazy.github.io/popcornn/"
+changelog = "https://github.com/khegazy/popcornn/blob/main/CHANGELOG.md"
+
+[tool.setuptools.packages.find]
+include = ["popcornn*"]
+exclude = ["tests_old*"]
 
 [tool.setuptools.package-data]
-Popcornn = ["py.typed"]
+popcornn = ["py.typed"]
 
 [tool.pyright]
-include = ["Popcornn"]
+include = ["popcornn"]
 exclude = ["**/__pycache__"]
 
 [tool.pytest.ini_options]
@@ -70,7 +74,7 @@ minversion = "6.0"
 addopts = ["-p no:warnings", "--import-mode=importlib"]
 xfail_strict = true
 log_cli_level = "warn"
-pythonpath = "Popcornn"
+pythonpath = "popcornn"
 testpaths = ["tests"]
 
 [tool.black]
@@ -83,11 +87,11 @@ exclude = '''
 skip-magic-trailing-comma = true
 
 [tool.isort]
-profile = 'black'
+profile = "black"
 skip_gitignore = true
 
 [tool.coverage.run]
-source = ["Popcornn"]
+source = ["popcornn"]
 
 [tool.coverage.report]
 exclude_also = [
@@ -146,13 +150,13 @@ lint.ignore = [
   "PT012",  # pytest.raises
   "RET505", # Unnecessary `elif` after `return`
 ]
-src = ["Popcornn"]
+src = ["popcornn"]
 lint.unfixable = [
   "T20",  # Removes print statements
   "F841", # Removes unused variables
 ]
 lint.pydocstyle.convention = "numpy"
-lint.isort.known-first-party = ["Popcornn"]
+lint.isort.known-first-party = ["popcornn"]
 lint.isort.required-imports = ["from __future__ import annotations"]
 extend-include = ["*.ipynb"]
 

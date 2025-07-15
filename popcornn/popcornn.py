@@ -47,6 +47,8 @@ class Popcornn:
         # Set device
         if device is None:
             device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+        if isinstance(device, str):
+            device = torch.device(device)
         if device.type == 'cuda':
             torch.cuda.empty_cache()
         self.device = device

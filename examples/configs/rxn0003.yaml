@@ -11,7 +11,7 @@ init_params:
   seed: 0
 opt_params:  
   - potential_params:
-      potential: repel
+      name: repel
     integrator_params: 
       path_ode_names: geodesic
     optimizer_params:
@@ -20,7 +20,7 @@ opt_params:
         lr: 1.0e-1
     num_optimizer_iterations: 1000
   - potential_params:
-      potential: uma
+      name: uma
       model_name: uma-s-1
       task_name: omol
     integrator_params: 

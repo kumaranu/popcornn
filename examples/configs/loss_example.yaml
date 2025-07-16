@@ -1,0 +1,53 @@
+initialization_params:
+    images: [[1.133, -1.486], [-1.166, 1.477]]
+    path_params:
+        name: mlp
+        n_embed : 8
+        depth : 4
+        activation: gelu
+optimization_params:
+  - potential_params:
+      name: wolfe_schlegel
+    integrator_params: 
+      rtol: 1.0e-5
+      atol: 1.0e-7
+      computation : parallel
+      sample_type : uniform
+      path_ode_names: ['projected_variational_reaction_energy', 'variable_reaction_energy']
+      path_ode_scales: [1.0, 0.1]
+    num_optimizer_iterations: 1000
+    optimizer_params:
+      optimizer:
+        name: adam
+        lr: 1.0e-3
+      path_ode_schedulers:
+        projected_variational_reaction_energy:
+          value: 1.0
+          name: cosine
+          start_value: 1.0
+          end_value: 0.0
+          last_step: 99
+        variable_reaction_energy:
+          value: 1.0
+          name: cosine
+          start_value: 0.0
+          end_value: 1.0
+          last_step: 99
+      TS_region_loss_names: ['E_mean']
+      TS_region_loss_scales: [1.0]
+      TS_time_loss_names: ['F_mag']
+      TS_time_loss_scales: [1.0]
+      TS_time_loss_scheduler:
+        E_mean:
+          value: 1.0
+          name: cosine
+          start_value: 1.0
+          end_value: 0.0
+          last_step: 99
+      TS_region_loss_scheduler:
+        F_mag:
+          value: 1.0
+          name: cosine
+          start_value: 1.0
+          end_value: 0.0
+          last_step: 99

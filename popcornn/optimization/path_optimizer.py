@@ -95,6 +95,8 @@ class PathOptimizer():
         Set the learning rate scheduler for the optimizer.
         """
         scheduler_dict = {key.lower(): key for key in dir(lr_scheduler) if not key.startswith('_')}
+        assert name.lower() in scheduler_dict,\
+            f"Scheduler class does not support '{name}', either add this functionality or select from {list(scheduler_dict.keys())}"
         name = scheduler_dict[name.lower()]
         scheduler_class = getattr(lr_scheduler, name)
         self.lr_scheduler = scheduler_class(self.optimizer, **config)

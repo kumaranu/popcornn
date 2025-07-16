@@ -48,7 +48,7 @@ path = Popcornn(images=images, path_params={'name': 'mlp', 'n_embed': 1, 'depth'
 Optional initialization parameters for Popcornn include `num_record_points` for the number of frames to be recorded after optimization, `output_dir` for optional debug outputs, `device`, `dtype`, and `seed`. For simpler reactions, `depth` of 2 helps limit the complexity of the reaction, while more complicated reactions may require a deeper path neural network.
 
 ### Optimize the path
-Machine learning potentials are vulnerable to unphysical, out-of-distribution configurations, and it's important to resolve atom clashing as an interpolation step. Luckily, you can do both the interpolation and the optimization with Popcornn. The state of the art regarding the interpolation is to optimize the path on a monotonic, repulsive potential with respect to the geodesic loss, or so-called [geodesic interpolation](https://pubs.aip.org/aip/jcp/article/150/16/164103/198363/Geodesic-interpolation-for-reaction-pathways). In general, therefore, you need multiple optimizations by providing multiple `opt_params`, each with a different potential, integral loss, and optimizer:
+Machine learning potentials are vulnerable to unphysical, out-of-distribution configurations, and it's important to resolve atom clashing as an interpolation step. Luckily, you can do both the interpolation and the optimization with Popcornn. The state of the art regarding the interpolation is to optimize the path on a monotonic, repulsive potential with respect to the geodesic loss, or so-called [geodesic interpolation](https://pubs.aip.org/aip/jcp/article/150/16/164103/198363/Geodesic-interpolation-for-reaction-pathways). In general, therefore, you need multiple optimizations by providing multiple `optimization_params`, each with a different potential, integral loss, and optimizer:
 ```
 final_images, ts_image = path.optimize_path(
     {
@@ -59,7 +59,7 @@ final_images, ts_image = path.optimize_path(
     },
     {
         'potential_params': {'potential': 'uma', 'model_name': 'uma-s-1', 'task_name': 'omol'},
-        'integrator_params': {'path_ode_names': 'projected_variable_reaction_energy', 'rtol': 1.0e-5, 'atol': 1.0e-7},
+        'integrator_params': {'path_ode_names': 'projected_variational_reaction_energy', 'rtol': 1.0e-5, 'atol': 1.0e-7},
         'optimizer_params': {'optimizer': {'name': 'adam', 'lr': 1.0e-3}},
         'num_optimizer_iterations': 1000,
     },

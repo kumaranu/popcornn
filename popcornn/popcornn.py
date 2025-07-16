@@ -88,14 +88,14 @@ class Popcornn:
     
     def optimize_path(
             self,
-            *opt_params: list[dict],
+            *optimization_params: list[dict],
             output_ase_atoms: bool = True
     ):
         """
         Run the optimization.
         
         Args:
-            opt_params (list[dict]): 
+            optimization_params (list[dict]): 
                 List of dictionaries containing the parameters for each optimization run.
                 Each dictionary should contain the following keys:
                 - potential_params: Parameters for the potential.
@@ -106,7 +106,7 @@ class Popcornn:
                 Number of points to record along the path when returning and saving the optimized path.
         """
         # Optimize the path
-        for i, params in enumerate(opt_params):
+        for i, params in enumerate(optimization_params):
             if self.output_dir is not None:
                 output_dir = f"{self.output_dir}/opt_{i}"
             else:

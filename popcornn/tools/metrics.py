@@ -264,10 +264,10 @@ def get_loss_fxn(name, **kwargs):
 
 class Metrics():
     all_ode_fxn_names = [
-        'projected_variable_reaction_energy',
+        'projected_variational_reaction_energy',
         'variable_reaction_energy',
         'vre_variational_error',
-        'projected_variable_reaction_energy_mag',
+        'projected_variational_reaction_energy_mag',
         'E',
         'E_mean',
         'F_mag'
@@ -457,7 +457,7 @@ class Metrics():
         return F*V, variables
 
 
-    def projected_variable_reaction_energy(self, get_required_variables=False, **kwargs):
+    def projected_variational_reaction_energy(self, get_required_variables=False, **kwargs):
         if get_required_variables:
             return ('forces', 'velocities') 
         variables = self._parse_input(**kwargs)
@@ -469,7 +469,7 @@ class Metrics():
         return torch.abs(overlap), variables
 
 
-    def projected_variable_reaction_energy_mag(self, get_required_variables=False, **kwargs):
+    def projected_variational_reaction_energy_mag(self, get_required_variables=False, **kwargs):
         if get_required_variables:
             return ('forces', 'velocities') 
         variables = self._parse_input(**kwargs)
@@ -498,12 +498,12 @@ class Metrics():
     def vre_variational_error(self, get_required_variables=False, **kwargs):
         if get_required_variables:
             return (
-                *self.projected_variable_reaction_energy(get_required_variables=True),
+                *self.projected_variational_reaction_energy(get_required_variables=True),
                 *self.variable_reaction_energy(get_required_variables=True)
             ) 
         variables = self._parse_input(**kwargs)
         
-        pvre = self.projected_variable_reaction_energy(**variables)
+        pvre = self.projected_variational_reaction_energy(**variables)
         vre = self.variable_reaction_energy(**variables)
         return vre - pvre, variables
 

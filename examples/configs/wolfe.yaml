@@ -1,11 +1,11 @@
-init_params:
+initialization_params:
   images: [[1.133, -1.486], [-1.166, 1.477]]
   path_params:
     name: mlp
     n_embed : 8
     depth : 4
     activation: gelu
-opt_params:
+optimization_params:
   - potential_params:
       name: wolfe_schlegel
     integrator_params: 

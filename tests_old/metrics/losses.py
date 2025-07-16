@@ -16,10 +16,10 @@ def test_losses():
         # Get config file
         config_path = os.path.join("configs", f"loss_{potential}.yaml")
         config = tools.import_run_config(config_path)
-        opt_params = config['opt_params'][0]
-        opt_params['integrator_params']['path_loss_name'] = 'growing_string'
+        optimization_params = config['optimization_params'][0]
+        optimization_params['integrator_params']['path_loss_name'] = 'growing_string'
         for envelope in ['gauss', 'poly', 'sine', 'sine-gauss', 'butter']:
-            opt_params['integrator_params']['path_loss_params'] = {
+            optimization_params['integrator_params']['path_loss_params'] = {
                 'weight_type' : f"inv_{envelope}",
                 'variance_scale' : 2,
                 'weight_scale' : 1
@@ -27,7 +27,7 @@ def test_losses():
             print("ENV", envelope)
 
             # Run the optimization
-            mep = Popcornn(device=device, **config.get('init_params', {}))
-            path_output, ts_outpuit = mep.optimize_path(*config.get('opt_params', []), output_ase_atoms=False)
+            mep = Popcornn(device=device, **config.get('initialization_params', {}))
+            path_output, ts_outpuit = mep.optimize_path(*config.get('optimization_params', []), output_ase_atoms=False)
 test_losses()
     

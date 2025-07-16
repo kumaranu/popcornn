@@ -20,8 +20,8 @@ def popcornn_run_test(name, config_path, benchmark_path, save_results=False):
     config = tools.import_run_config(config_path)
 
     # Run the optimization
-    mep = Popcornn(device=device, **config.get('init_params', {}))
-    path_output, ts_output = mep.optimize_path(*config.get('opt_params', []), output_ase_atoms=False)
+    mep = Popcornn(device=device, **config.get('initialization_params', {}))
+    path_output, ts_output = mep.optimize_path(*config.get('optimization_params', []), output_ase_atoms=False)
 
     # Compare path output with saved benchmarks
     T_atol, T_rtol = 1e-6, 1e-6
@@ -179,7 +179,7 @@ def popcornn_run_test(name, config_path, benchmark_path, save_results=False):
 
 def scheduler_test(path, config, schedule_fxn, device):
     # Shortcuts
-    config = config['opt_params'][0]
+    config = config['optimization_params'][0]
     scheduler_config = config['optimizer_params']['path_ode_schedulers']
     fxn1_name = config['integrator_params']['path_ode_names'][0]
     fxn2_name = config['integrator_params']['path_ode_names'][1]

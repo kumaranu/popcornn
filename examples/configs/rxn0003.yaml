@@ -1,4 +1,4 @@
-init_params:
+initialization_params:
   images: configs/rxn0003.xyz
   path_params: 
     name: mlp
@@ -9,7 +9,7 @@ init_params:
   # output_dir: output
   device: cuda
   seed: 0
-opt_params:  
+optimization_params:  
   - potential_params:
       name: repel
     integrator_params: 
@@ -24,7 +24,7 @@ opt_params:
       model_name: uma-s-1
       task_name: omol
     integrator_params: 
-      path_ode_names: projected_variable_reaction_energy
+      path_ode_names: projected_variational_reaction_energy
       rtol: 1.0e-5
       atol: 1.0e-7
     optimizer_params:

@@ -35,11 +35,15 @@ requires-python = ">=3.10, <3.13"
 dependencies = [
     "numpy",
     "torch",
+    "torch_geometric",
     "matplotlib",
+    "ase",
+    "tqdm",
     "pytest",
     "pytest-cov",
     "PyYAML",
-    "torchpathdiffeq",
+    "torchpathdiffeq @ git+https://github.com/khegazy/torchpathdiffeq.git",
+    "fairchem-core @ git+https://github.com/ericyuan00000/fairchem.git@patch-2#subdirectory=packages/fairchem-core",
 ]
 
 [project.optional-dependencies]

@@ -25,6 +25,16 @@ python run.py --config configs/rxn0003.yaml
 ```
 All Popcornn parameters are specified in the config file.
 
+For fast development and playing around with popcornn we offer two examples based on the the Wolfe potential
+```
+python run.py --config configs/wolfe.yaml
+```
+will run the fast Wolfe example and 
+```
+python run.py --config configs/loss_example.yaml
+```
+will run the fast Wolfe example with more advanced loss capabilities.
+
 ## Set up your own Popcornn
 The config file is read in the run script as a dictionary, so you can also directly specify the configs in your own python script, giving you more handles on the inputs and outputs.
 

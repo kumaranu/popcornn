@@ -84,6 +84,29 @@ write('popcornn_ts.xyz', ts_image)
 ```
 In this example, you should get a barrier of ~3.6 eV. To be fully rigorous, we [suggest](https://www.nature.com/articles/s41467-024-52481-5) doing a subsequent saddle point optimization for the Popcornn transition state followed by forward/reverse intrisic reaction coordinate calculations, since Popcornn is not actually returning a minimum energy path but just targeting the transition state directly. Both saddle point optimization and intrisic reaction coordinate calculation are supported by [Sella](https://github.com/zadorlab/sella/tree/master) as ASE Optimizers.
 
+### Managing memory and handling potential OOM errors
+Popcornn uses [torchpathdiffeq](https://github.com/khegazy/torchpathdiffeq/tree/main) to numerically calculate the path integral used in the loss. When calculating the path integral, torchpathdiffeq employs an adaptive evaluation mesh. This adaptive mesh results in varying batch sizes within a single torchpathdiffeq evaluation. The adaptive batch size may grow and can lead to out-of-memory errors (OOM). To avoid these OOM errors, torchpathdiffeq adaptively limits the batch size based on the cached and free GPU memory. While infrequent, it is possible for OOM errors to occur. There are two reasons for this, each with a solution. The user should apply these solutions in this order if an OOM error occurs.
+1. PyTorch memory management is optimized to run a single batch size many times, however, the adaptive path integration scheme in torchpathdiffeq varies the batch size. To allow PyTorch to resize the memory used for batch evaluations, the user must specify the following environment flag
+```
+PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+```
+or in Python, place
+```
+import os
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
+```
+at the top of the first Python file being called. This will solve most OOM errors.
+
+2. If the OOM error persists, then torchpathdiffeq is struggling to calculate the memory footprint for your problem. To solve this, the user must limit the available GPU memory torchpathdiffeq is allowed to use via the `total_mem_usage` flag. `total_mem_usage` is a ratio between 0 and 1 that determines how much of the available GPU memory will be allocated for the next batch evaluation. `total_mem_usage` is set in the run config file, inside the `integration_params`, with a default value of 0.9.
+```
+integrator_params: 
+    path_ode_names: projected_variational_reaction_energy
+    rtol: 1.0e-5
+    atol: 1.0e-7
+    total_mem_usage: 0.75
+```
+
+
 ## Support
 
 Popcornn is still under active development, and we welcome any feedback or contributions. Please open a GitHub issue if any problems are encountered!

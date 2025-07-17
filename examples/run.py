@@ -1,3 +1,5 @@
+import os
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = 'expandable_segments:True'
 from ase import Atoms
 from ase.io import read, write
 from popcornn import Popcornn

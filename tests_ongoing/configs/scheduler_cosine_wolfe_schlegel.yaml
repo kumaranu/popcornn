@@ -1,0 +1,38 @@
+initialization_params:
+  images: [[1.133, -1.486], [-1.166, 1.477]]
+  path_params: 
+    name: mlp
+    n_embed: 4
+    depth: 2
+    activation: gelu
+  num_record_points: 101
+  seed: 2025
+optimization_params:  
+  - potential_params:
+      name: wolfe_schlegel
+    integrator_params:
+      path_ode_names:
+        - projected_variational_reaction_energy
+        - variable_reaction_energy
+      method : dopri5
+      rtol: 1.0e-5
+      atol: 1.0e-6
+    optimizer_params:
+      optimizer:
+        name: adam
+        lr: 1.0e-3
+      path_ode_schedulers:
+        projected_variational_reaction_energy:
+            value: 1.0
+            name: cosine
+            start_value: 1.0
+            end_value: 0.0
+            last_step: 125
+        variable_reaction_energy:
+            value: 1.0
+            name: cosine
+            start_value: 0.0
+            end_value: 1.0
+            last_step: 125
+      
+    num_optimizer_iterations: 150

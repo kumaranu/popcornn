@@ -23,7 +23,7 @@ cd popcornn/examples
 
 python run.py --config configs/rxn0003.yaml
 ```
-All Popcornn parameters are specified in the config file.
+All Popcornn parameters are specified in the config file. This example should complete in under an hour. Please note that we are still developing the convergence criteria, so you may adjust the number of optimization iterations to balance accuracy and speed.
 
 For fast development and playing around with popcornn we offer two examples based on the the Wolfe potential
 ```
